@@ -17,14 +17,20 @@ def index():
 @app.route('/check_slots', methods=['POST'])
 def check_slots():
     data = request.get_json()
+    print(f"[INFO] Incoming request JSON: {data}")  # Log input
+
     date = data.get("date")
     time = data.get("time")
 
     if not date or not time:
-        return jsonify({"error": "Missing date or time"}), 400
+        error_msg = {"error": "Missing date or time"}
+        print(f"[ERROR] {error_msg}")  # Log error
+        return jsonify(error_msg), 400
 
     available = time in available_slots.get(date, [])
-    return jsonify({"available": available}), 200
+    response = {"available": available}
+    print(f"[INFO] Response sent: {response}")  # Log output
+    return jsonify(response), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
